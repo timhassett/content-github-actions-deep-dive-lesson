@@ -1,9 +1,5 @@
-name: Deploy my Lambda Function
-
-on:
-  push:
-    branches:
-      - main
+name: Deploy Lambda Function
+on: [push]
 
 jobs:
 
@@ -11,9 +7,9 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
           python-version: 3.8
       - name: Install libraries
@@ -29,22 +25,22 @@ jobs:
     needs: lint
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
-      - name: Set up python
-        uses: actions/setup-python@v4
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
           python-version: 3.8
       - name: Install libraries
         run: |
             cd function
             python -m pip install --upgrade pip
-            if [ -f requirements.txt ]; then pip install -r requirements.txt -t .; fi
-      - name: Create zip bundle
+            if [ -f requirements.txt ]; then pip install -r requirements.txt -t .; fi 
+      - name: Zip bundle
         run: |
             cd function
             zip -r ../${{ github.sha }}.zip .
       - name: Archive artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: zipped-bundle
           path: ${{ github.sha }}.zip
@@ -57,7 +53,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+          GITHUB_TOKEN: ${{ secrets.github_token }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: ${{ github.run_number }}
           release_name: Release ${{ github.run_number }}
@@ -65,7 +61,7 @@ jobs:
           draft: false
           prerelease: false
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2
         with:
           name: zipped-bundle
       - name: Upload release asset
@@ -73,7 +69,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
           asset_path: ./${{ github.sha }}.zip
           asset_name: source_code_with_libraries.zip
           asset_content_type: application/zip
