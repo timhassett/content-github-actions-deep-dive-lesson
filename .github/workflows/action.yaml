@@ -69,7 +69,7 @@ jobs:
         with:
           name: zipped-bundle
       - name: Upload release asset
-        uses: actions/upload-relase-assett@v1
+        uses: actions/upload-relase-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
         with:
