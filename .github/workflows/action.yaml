@@ -119,7 +119,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
       - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-paggithubes@master
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CONFIG_FILE: mkdocs.yaml
